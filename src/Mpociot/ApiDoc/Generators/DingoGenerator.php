@@ -30,11 +30,11 @@ class DingoGenerator extends AbstractGenerator
         $routeDescription = $this->getRouteDescription($routeAction['uses']);
 
         return $this->getParameters([
-            'id' => md5($route->uri().':'.implode($route->getMethods())),
+            'id' => md5($route->uri().':'.implode($route->methods())),
             'resource' => $routeGroup,
             'title' => $routeDescription['short'],
             'description' => $routeDescription['long'],
-            'methods' => $route->getMethods(),
+            'methods' => $route->methods(),
             'uri' => $route->uri(),
             'parameters' => [],
             'response' => $response,
@@ -46,7 +46,7 @@ class DingoGenerator extends AbstractGenerator
      *
      * @param  bool $disable
      *
-     * @return  void
+     * @return  boolean
      */
     public function prepareMiddleware($disable = true)
     {

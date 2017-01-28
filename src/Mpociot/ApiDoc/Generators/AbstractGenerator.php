@@ -14,7 +14,7 @@ use Mpociot\ApiDoc\Parsers\RuleDescriptionParser as Description;
 abstract class AbstractGenerator
 {
     /**
-     * @param $route
+     * @param \Illuminate\Routing\Route $route
      *
      * @return mixed
      */
@@ -66,7 +66,7 @@ abstract class AbstractGenerator
     }
 
     /**
-     * @param  $route
+     * @param \Illuminate\Routing\Route $route
      * @param  $bindings
      * @param  $headers
      *
@@ -76,7 +76,7 @@ abstract class AbstractGenerator
     {
         $uri = $this->addRouteModelBindings($route, $bindings);
 
-        $methods = $route->getMethods();
+        $methods = $route->methods();
 
         // Split headers into key - value pairs
         $headers = collect($headers)->map(function ($value) {

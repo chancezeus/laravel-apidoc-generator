@@ -32,7 +32,7 @@ class CollectionWriter
                 'description' => '',
                 'schema' => 'https://schema.getpostman.com/json/collection/v2.0.0/collection.json',
             ],
-            'item' => $this->routeGroups->map(function ($routes, $groupName) {
+            'item' => $this->routeGroups->map(function (Collection $routes, $groupName) {
                 return [
                     'name' => $groupName,
                     'description' => '',

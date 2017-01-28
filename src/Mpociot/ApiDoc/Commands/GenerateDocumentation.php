@@ -44,8 +44,6 @@ class GenerateDocumentation extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -84,7 +82,7 @@ class GenerateDocumentation extends Command
         } else {
             $parsedRoutes = $this->processDingoRoutes($generator, $allowedRoutes, $routePrefix, $middleware);
         }
-        $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sort(function ($a, $b) {
+        $parsedRoutes = collect($parsedRoutes)->groupBy('resource')->sort(function (Collection $a, Collection $b) {
             return strcmp($a->first()['resource'], $b->first()['resource']);
         });
 
@@ -106,7 +104,7 @@ class GenerateDocumentation extends Command
             ->with('outputPath', ltrim($outputPath, 'public/'))
             ->with('showPostmanCollectionButton', ! $this->option('noPostmanCollection'));
 
-        $parsedRouteOutput = $parsedRoutes->map(function ($routeGroup) {
+        $parsedRouteOutput = $parsedRoutes->map(function (Collection $routeGroup) {
             return $routeGroup->map(function ($route) {
                 $route['output'] = (string) view('apidoc::partials.route')->with('parsedRoute', $route);
 
@@ -231,7 +229,7 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * @return mixed
+     * @return \Illuminate\Routing\RouteCollection|Route[]|mixed
      */
     private function getRoutes()
     {
@@ -243,10 +241,10 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * @param AbstractGenerator  $generator
+     * @param AbstractGenerator $generator
      * @param $allowedRoutes
      * @param $routePrefix
-     *
+     * @param $middleware
      * @return array
      */
     private function processLaravelRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware)
@@ -256,12 +254,12 @@ class GenerateDocumentation extends Command
         $bindings = $this->getBindings();
         $parsedRoutes = [];
         foreach ($routes as $route) {
-            if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->getUri()) || in_array($middleware, $route->middleware())) {
+            if (in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->uri()) || in_array($middleware, $route->middleware())) {
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
                     $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse);
-                    $this->info('Processed route: ['.implode(',', $route->getMethods()).'] '.$route->getUri());
+                    $this->info('Processed route: ['.implode(',', $route->methods()).'] '.$route->uri());
                 } else {
-                    $this->warn('Skipping route: ['.implode(',', $route->getMethods()).'] '.$route->getUri());
+                    $this->warn('Skipping route: ['.implode(',', $route->methods()).'] '.$route->uri());
                 }
             }
         }
@@ -273,7 +271,7 @@ class GenerateDocumentation extends Command
      * @param AbstractGenerator $generator
      * @param $allowedRoutes
      * @param $routePrefix
-     *
+     * @param $middleware
      * @return array
      */
     private function processDingoRoutes(AbstractGenerator $generator, $allowedRoutes, $routePrefix, $middleware)
@@ -286,9 +284,9 @@ class GenerateDocumentation extends Command
             if (empty($allowedRoutes) || in_array($route->getName(), $allowedRoutes) || str_is($routePrefix, $route->uri()) || in_array($middleware, $route->middleware())) {
                 if ($this->isValidRoute($route) && $this->isRouteVisibleForDocumentation($route->getAction()['uses'])) {
                     $parsedRoutes[] = $generator->processRoute($route, $bindings, $this->option('header'), $withResponse);
-                    $this->info('Processed route: ['.implode(',', $route->getMethods()).'] '.$route->uri());
+                    $this->info('Processed route: ['.implode(',', $route->methods()).'] '.$route->uri());
                 } else {
-                    $this->warn('Skipping route: ['.implode(',', $route->getMethods()).'] '.$route->uri());
+                    $this->warn('Skipping route: ['.implode(',', $route->methods()).'] '.$route->uri());
                 }
             }
         }
@@ -297,7 +295,7 @@ class GenerateDocumentation extends Command
     }
 
     /**
-     * @param $route
+     * @param \Illuminate\Routing\Route $route
      *
      * @return bool
      */

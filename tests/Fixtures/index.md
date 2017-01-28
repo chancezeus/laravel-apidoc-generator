@@ -43,7 +43,7 @@ var settings = {
     "headers": {
         "accept": "application/json"
     }
-}
+};
 
 $.ajax(settings).done(function (response) {
     console.log(response);
@@ -82,7 +82,7 @@ var settings = {
     "headers": {
         "accept": "application/json"
     }
-}
+};
 
 $.ajax(settings).done(function (response) {
     console.log(response);

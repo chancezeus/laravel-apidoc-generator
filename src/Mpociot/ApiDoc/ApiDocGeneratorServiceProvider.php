@@ -31,10 +31,11 @@ class ApiDocGeneratorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app['apidoc.generate'] = $this->app->share(function () {
+        $this->app->singleton('apidoc.generate', function () {
             return new GenerateDocumentation();
         });
-        $this->app['apidoc.update'] = $this->app->share(function () {
+
+        $this->app->singleton('apidoc.update', function () {
             return new UpdateDocumentation();
         });
 

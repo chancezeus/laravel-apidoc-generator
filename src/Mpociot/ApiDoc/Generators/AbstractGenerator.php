@@ -441,7 +441,7 @@ abstract class AbstractGenerator
         foreach ($headers as $name => $value) {
             $name = strtr(strtoupper($name), '-', '_');
 
-            if (! Str::startsWith($name, $prefix) && $name !== 'CONTENT_TYPE') {
+            if (! Str::startsWith($name, $prefix) && !in_array(strtoupper($name), ['CONTENT_TYPE', 'AUTHORIZATION'])) {
                 $name = $prefix.$name;
             }
 

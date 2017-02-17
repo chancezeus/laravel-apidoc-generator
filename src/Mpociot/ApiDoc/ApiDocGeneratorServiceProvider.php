@@ -34,7 +34,6 @@ class ApiDocGeneratorServiceProvider extends ServiceProvider
         $this->app->singleton('apidoc.generate', function () {
             return new GenerateDocumentation();
         });
-
         $this->app->singleton('apidoc.update', function () {
             return new UpdateDocumentation();
         });
